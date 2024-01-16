@@ -34,6 +34,3 @@ Segue exemplo:
 * Pandas - Manipulação de dados
 * python-dotenv - Para guardar as configurações do projeto em um arquivo .env
 * webdriver-manager - Faz a gestão automática do chromedriver
-
-
-
