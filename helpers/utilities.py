@@ -20,7 +20,7 @@ class Utilities:
         
     def open_chrome(self):
         options = Options()
-        options.add_argument('--headless')
+        # options.add_argument('--headless')
 
         # options.add_argument("--incognito")
         

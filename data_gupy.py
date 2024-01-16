@@ -1,12 +1,12 @@
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.common.keys import Keys
+
 from selenium.webdriver.common.by import By
 from helpers.utilities import Utilities
 from time import sleep
 import pandas as pd
 
-from selenium.webdriver.support.ui import Select
+
 
 
 class Gupy:
@@ -86,7 +86,7 @@ class Gupy:
                     label = element.get_attribute('aria-label')
                     if label not in processed_labels:
                         data = self.scrapy_data(label)
-                        print(data)
+                        print(f'Dados {data}')
                         all_data.extend(data)
                         processed_labels.append(label)
                                     
