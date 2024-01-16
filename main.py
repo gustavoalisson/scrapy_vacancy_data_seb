@@ -1,18 +1,22 @@
 from data_gupy import Gupy
 from form_rpa import Form
 from dotenv import load_dotenv
+from log_data.logger import LogGenerator
 
 import os
 
 load_dotenv()
 
-scrapy_grupy = Gupy()
+log_instance = LogGenerator()
+logger = log_instance.setup_logger()
+
+scrapy_grupy = Gupy(logger)
 scrapy_grupy.start_browser()
 scrapy_grupy.select_url(os.getenv('URL_GUPY_GRUPOSEB'))
 scrapy_grupy.pre_processament_page()
 data_df = scrapy_grupy.run_scraper()
 
-form = Form()
+form = Form(logger)
 form.start_browser()
 form.select_url(os.getenv('URL_FORM'))
 

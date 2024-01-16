@@ -6,32 +6,33 @@ from helpers.utilities import Utilities
 from time import sleep
 import pandas as pd
 
-
-
-
 class Gupy:
-    __slots__ = "robot"
-    def __init__(self) -> None:
+    __slots__ = "robot", "logger"
+    def __init__(self, log) -> None:
         self.robot = Utilities()
-
+        self.logger = log
 
     def start_browser(self):
         try:
             self.robot.open_chrome()
+            self.logger.info('Navegador GUPY aberto.')
         except Exception as e:
+            self.logger.error(f'Erro ao abrir navegador GUPY {e}')
             raise
 
     def select_url(self, url):
         try:
+            self.logger.info(f'Acessando URL {url}')
             self.robot.browser.get(url)
             self.robot.browser.delete_all_cookies()
         except Exception as e:
+            self.logger.error(f'Erro ao acessar URL {e}')            
             raise
         
     def pre_processament_page(self):
         sleep(5)
-        try:
-            
+        self.logger.info('Preparando ambiente para iniciar Extração de dados.')
+        try: 
             btn_initial_ok = self.robot.browser.find_element(By.XPATH, '//*[@id="radix-0"]/div[2]/button')
             btn_cookies_accept = self.robot.browser.find_element(By.XPATH, '//*[@id="onetrust-accept-btn-handler"]')
             
@@ -40,16 +41,13 @@ class Gupy:
             if btn_cookies_accept:
                 btn_cookies_accept.click()
         except Exception as e:
-            print(f'Erro ao capturar elemento da página. {e}')
-            
-        
-    
+            self.logger.error(f'Erro ao capturar elemento da página. {e}')
+                
     def scrapy_data(self, page):
         
         all_data = []
         
-        print(f"Processando página {page}")
-        
+        self.logger.info(f"Processando página {page}")
         
         element_data_listing_jobs = self.robot.browser.find_elements(By.XPATH,'//*[@id="job-listing"]/ul/li/a/div')
         
@@ -75,7 +73,6 @@ class Gupy:
         all_data = []
         try:
             while True:
-                print('estou dentro do while')
                 # Selecione os elementos de cada página
                 page_elements = WebDriverWait(self.robot.browser, 10).until(
                     EC.presence_of_all_elements_located((By.CSS_SELECTOR, 'button[data-testid="pagination-page-button"]'))
@@ -86,7 +83,7 @@ class Gupy:
                     label = element.get_attribute('aria-label')
                     if label not in processed_labels:
                         data = self.scrapy_data(label)
-                        print(f'Dados {data}')
+                        self.logger.info(f'Dados {data}')
                         all_data.extend(data)
                         processed_labels.append(label)
                                     
@@ -98,14 +95,14 @@ class Gupy:
                             ...
                     
                         if next_button.get_attribute('aria-disabled') == 'true':
-                            print('Finalizado...')
+                            self.logger.info('Extração de dados finalizada...')
                             
                             return False
                         
                         next_button.click()
                         # sleep(2)
         except Exception as e:
-            print('erro durante a execução.')                    
+            self.logger.info('erro durante a execução.')                    
         finally:
             df = pd.DataFrame(all_data)
             return df        
