@@ -21,5 +21,11 @@ form.start_browser()
 form.select_url(os.getenv('URL_FORM'))
 
 for i, info in data_df.iterrows():
-    form.data_insert(info['Localidade'], info['Cargo'], info['Efetividade'], info)
     
+    info['Localidade'] = info['Localidade'] if info['Localidade'] else "Dado vazio no site."
+    info['Cargo'] = info['Cargo'] if info['Cargo'] else "Dado vazio no site."
+    info['Efetividade'] = info['Efetividade'] if info['Efetividade'] else "Dado vazio no site."
+    
+    form.data_insert(info['Localidade'], info['Cargo'], info['Efetividade'], info)
+
+logger.info('Inserção de dados concluída!!!')
